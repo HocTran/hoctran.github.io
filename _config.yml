@@ -1,1 +1,25 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-slate
+
+title: "Hoc T's Blog"
+#name: "HT's Tech Blog"
+author: Hoc T
+
+#baseurl: "/"
+description: "My learning notes"
+profile_url: "http://hoctran.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+# excerpt_separator: <!--more-->
+plugins:
+  - jekyll-feed
+  - jekyll-archives
+exclude:
+  - Gemfile
+  - Gemfile.lock
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
+  toc_levels: 1..3

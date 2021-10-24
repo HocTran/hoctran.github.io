@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=2bacec2b4f183d6ca941698f049b9912f6bb7670">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Rnn Predict Currency Exchange Rate Part1 | Hoc T’s Blog</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Rnn Predict Currency Exchange Rate Part1" />
+<meta name="author" content="Hoc T" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Predicts currency exchange rate using RNN" />
+<meta property="og:description" content="Predicts currency exchange rate using RNN" />
+<link rel="canonical" href="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html" />
+<meta property="og:url" content="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html" />
+<meta property="og:site_name" content="Hoc T’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-10-24T00:00:00+07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Rnn Predict Currency Exchange Rate Part1" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html","headline":"Rnn Predict Currency Exchange Rate Part1","dateModified":"2021-10-24T00:00:00+07:00","datePublished":"2021-10-24T00:00:00+07:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html"},"author":{"@type":"Person","name":"Hoc T"},"description":"Predicts currency exchange rate using RNN","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          
+            <a id="forkme_banner" href="https://github.com/HocTran/hoctran.github.io">View on GitHub</a>
+          
+
+          <h1 id="project_title">Hoc T's Blog</h1>
+          <h2 id="project_tagline">My learning notes</h2>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1 id="predicts-currency-exchangerate-using-rnn">Predicts currency exchange rate using RNN</h1>
+
+<p><img src="/assets/images/rnn-part-1/cat_touching_water.gif" alt="Touching the water" /></p>
+
+<p><em>Fig. 1 The very first micro-step touching the Deep Learning pool</em></p>
+
+<h3 id="table-of-contents">Table of contents</h3>
+
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#preparations">Preparations</a></li>
+  <li><a href="#fetch-and-prepare-the-datasources">Fetch and prepare the datasources</a></li>
+  <li><a href="#build-the-model">Build the model</a>
+    <ul>
+      <li><a href="#data-pre-processing">Data pre-processing</a></li>
+      <li><a href="#train-the-model">Train the model</a></li>
+    </ul>
+  </li>
+  <li><a href="#make-the-prediction-and-evaluate-the-result">Make the prediction and evaluate the result</a></li>
+  <li><a href="#playing-with-the-configuration">Playing with the configuration</a></li>
+  <li><a href="#whats-next">What’s next??</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>We’re going through steps on building a simple model using regression with RNN that can predict the currency exchange rate. In this article, we will use USD ($) and THB (฿).</p>
+
+<p>In this scope of the article, I follow the course (and source-code) of <a href="https://www.udemy.com/user/ligency-team/">Ligency-Team</a>. Therefore, I don’t go into the detail of what is the RNN model, but about how to apply the concept to resolve a real-life problem. If you’re interested in the course, please checkout <a href="https://www.udemy.com/course/deeplearning/">Deep Learning A-Z course</a> from Ligency-Team.</p>
+
+<p><a href="https://github.com/HocTran/rnn-currency-exchange-rate">The full source code can be found here</a>.</p>
+
+<p>As a beginner, I also have some troubles while building up and running the solution, so I want to share the setup as well. Of course, a little Python experience will help you go faster, but if you don’t have, it’s fine; you still get it quickly with basic programming skills, I promise 😉.</p>
+
+<p>This article consists of several steps to go:</p>
+
+<ul>
+  <li>Prepare the working environment.</li>
+  <li>Get the real exchange rate data and prepare the data set.</li>
+  <li>Build the model.</li>
+  <li>Using the trained model to predict the exchange rate and evaluate the result.</li>
+  <li>Adjust the model and compare the result.</li>
+</ul>
+
+<blockquote>
+  <p>Remark1: The article focuses on using RNN to solve a problem, not optimizing the results.</p>
+</blockquote>
+
+<blockquote>
+  <p>Remark2: The article is for learning material; the result is not considered a trusted source by any means 😉.</p>
+</blockquote>
+
+<h2 id="preparations"> Preparations</h2>
+
+<p>The code was compiled under <strong>Python v3.9.7</strong>, with the following packages</p>
+
+<ul>
+  <li>numpy (1.19.5)</li>
+  <li>pandas (1.3.4)</li>
+  <li>matplotlib (3.4.3)</li>
+  <li>keras (2.4.3)</li>
+  <li>scikit-learn (1.0)</li>
+  <li>tensorflow (2.4.1)</li>
+  <li>(and auto packages dependencies)</li>
+</ul>
+
+<blockquote>
+  <p>Skip this step if you’re already familiar with the setup.</p>
+</blockquote>
+
+<p>I had a few troubles setting up my environment; especially I got lots of conflicts while installing the packages. So I end up using <a href="https://medium.com/r/?url=https%3A%2F%2Fwww.anaconda.com%2Fproducts%2Findividual"><strong>Anaconda</strong></a> to manage the environment.</p>
+
+<p>See the Anaconda website to learn more about the detail. Here I wrap-up what I did:</p>
+
+<ul>
+  <li>Download and install Anaconda Navigator.</li>
+  <li>(Optional) Create a new working environment. This is strongly recommended (from my perspective). The default env contains many other packages you don’t need for the project, which may lead to dependency conflicts.</li>
+  <li>Then, activate your environment.</li>
+  <li>
+    <p>Add a new channel <strong>conda-forge</strong> into the channel list.</p>
+
+    <p>The default package hub doesn’t have all packages or versions we need, we’ll find them in the channel <strong>conda-forge</strong>.</p>
+  </li>
+  <li>Search and install all packages (listed above)</li>
+  <li>
+    <p>Launch the code editor from the home page.</p>
+
+    <p>I preferably select Spyder, which I love its feature ‘Variable Explorer’. But you can choose any.</p>
+  </li>
+</ul>
+
+<p>Alright, that’s it! You’re now set for the coding.</p>
+
+<blockquote>
+  <p>Alternative 1 - You can use Anaconda via the command-line interface.</p>
+</blockquote>
+
+<blockquote>
+  <p>Alternative 2 - You can use Google Colab; the env is set and ready from the web browser.</p>
+</blockquote>
+
+<h2 id="fetch-and-prepare-the-datasources">Fetch and prepare the datasources</h2>
+
+<p>In order to feed the train and evaluation, we need data. We will go to the <a href="https://medium.com/r/?url=https%3A%2F%2Fwww.xe.com%2Fcurrencycharts%2F">XE.com</a>.</p>
+
+<blockquote>
+  <p>I also attached the train and test sets (rate_train.csv and rate_test.csv) in the repo, you can skip this step and go to pre-processing.</p>
+</blockquote>
+
+<p>From XE.com, in the free charts section, select the source and destination currencies, in our case, they’re <strong>USD</strong> and <strong>THB</strong> correspondingly. To make the prediction more precisely, we select the data in the past <strong>10 years</strong>. Then, inspect the network call, and we’ll get the raw json for the rates. You can also find the attached json file in the source code <code class="language-plaintext highlighter-rouge">raw_10y.json</code>.</p>
+
+<p><img src="/assets/images/rnn-part-1/xe_chart.png" alt="Xe Currency Charts" /></p>
+
+<p><em>Fig. 2 USD to THB exchange rates</em></p>
+
+<p>Once we had the raw data, we split it into two parts, one for training and the other one for evaluating.</p>
+
+<p>Open the <strong>update_data_set.py</strong>, which contains a few simple steps to split the data.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#1. Import the libraries
+</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="c1">#2. Parse the json
+</span><span class="nb">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'raw_10y.json'</span><span class="p">)</span>
+<span class="n">fileData</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+
+<span class="n">first</span> <span class="o">=</span> <span class="n">fileData</span><span class="p">[</span><span class="s">'batchList'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">startTime</span> <span class="o">=</span> <span class="n">first</span><span class="p">[</span><span class="s">'startTime'</span><span class="p">]</span>
+<span class="n">interval</span> <span class="o">=</span> <span class="n">first</span><span class="p">[</span><span class="s">'interval'</span><span class="p">]</span>
+<span class="n">rates</span> <span class="o">=</span> <span class="n">first</span><span class="p">[</span><span class="s">'rates'</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="c1">#3. Mapping data
+</span><span class="n">nRow</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rates</span><span class="p">)</span>
+<span class="n">dates</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nRow</span><span class="p">):</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">startTime</span> <span class="o">+</span> <span class="n">interval</span> <span class="o">*</span> <span class="n">i</span>
+    <span class="n">dates</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="p">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">).</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y.%m.%d'</span><span class="p">))</span>
+
+<span class="n">dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">rates</span><span class="p">)),</span> <span class="n">columns</span> <span class="o">=</span><span class="p">[</span><span class="s">'date'</span><span class="p">,</span> <span class="s">'rate'</span><span class="p">])</span>
+
+<span class="c1">#4. Split to train and test set
+</span><span class="n">trainSize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nRow</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">trainSet</span> <span class="o">=</span> <span class="n">dataframe</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:</span><span class="n">trainSize</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">testSet</span> <span class="o">=</span> <span class="n">dataframe</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">trainSize</span><span class="p">:,</span> <span class="p">:]</span>
+
+<span class="c1">#5. Write to files
+</span><span class="n">trainSet</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'rate_train.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+<span class="n">testSet</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'rate_test.csv'</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Step #1. Import libraries</p>
+
+<ul>
+  <li>json lib is to parse json file we recorded earlier.</li>
+  <li>pandas is to write data into csv format (and read it later).</li>
+</ul>
+
+<p>Step #2. Parse the json</p>
+<ul>
+  <li>startTime - the time at the beginning, it means 10y ago by the time data was fetched.</li>
+  <li>interval - the time interval between every data row. In our case, it’s one day.</li>
+  <li>rates - they’re rate records for the past 10 years. Note, we drop the first value here, as it doesn’t present a rate.</li>
+</ul>
+
+<p>Step #3. Mapping data. Prepare data into 2 columns of <strong>date</strong> and <strong>rate</strong></p>
+
+<p>Step #4. Split data set into the train and test sets. Here we use 80% of the samples (equivalent to the first 8 years) as the train set. The rest is for the test set (2 years).
+Step #5. Write the data to the files.</p>
+
+<p>Congratulations 🎉! You now have the training set and evaluating set ready.</p>
+
+<h2 id="build-the-model">Build the model</h2>
+
+<p>Quick recap. Check out this ultimate article about RNN and LSTM.</p>
+
+<p><img src="/assets/images/rnn-part-1/rnn.png" alt="RNN" /></p>
+
+<p><em>Fig 3. RNN</em></p>
+
+<p>Overview of constants</p>
+
+<ul>
+  <li><strong>TIME_STEPS</strong>. The number of LSTM inputs and outputs.</li>
+  <li><strong>LSTM_UNITS</strong>. The number of neurons in LSTM.</li>
+  <li><strong>DROPOUT</strong>. The rate that LSTM will drop when propagating.</li>
+  <li><strong>EPOCHS</strong>. The number of times model iterate the train.</li>
+  <li><strong>BATCH_SIZE</strong>. The number of data to feed in a batch.</li>
+</ul>
+
+<p>At the later point, you can adjust these values to observe the different results.</p>
+
+<h3 id="data-pre-processing">Data pre-processing</h3>
+
+<p>Even though, we already have training and test set, we need to do a bit more to make the data is feedable for the model.</p>
+
+<p>During this step, we only work with the train set.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">#1. Importing the training set
+</span><span class="n">dataset_train</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'rate_train.csv'</span><span class="p">)</span>
+<span class="n">training_set</span> <span class="o">=</span> <span class="n">dataset_train</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">].</span><span class="n">values</span>
+
+<span class="c1">#2. Feature Scaling
+</span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">training_set_scaled</span> <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">training_set</span><span class="p">)</span>
+
+<span class="c1">#3. Creating a data structure with TIME_STEPS timesteps and 1 output
+</span><span class="n">X_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">TIME_STEPS</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_set</span><span class="p">)):</span>
+    <span class="n">X_train</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">training_set_scaled</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">TIME_STEPS</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">y_train</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">training_set_scaled</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1">#4 Reshaping
+</span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="p">(</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Step #1. Read data from the set. We again use <strong>pandas</strong> to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the <strong>numpyarray</strong>.</p>
+
+<p>Step #2. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the <strong>MinMaxScaler</strong> from <strong>sklearn</strong>.</p>
+
+<p>Step #3. Natively, we convert the set into 2 parts, the <strong>X_train</strong> stands for the inputs, the <strong>y_train</strong> stands for the value which the model drives to.</p>
+
+<p>In our RNN model, it works with the time series, as amount of previous steps will be used as inputs for one current step. Therefore each item in <strong>X_train</strong> consists of an array with previous <strong>TIME_STEPS</strong> values. The <strong>y_train</strong> is simply inserting the plain values.</p>
+
+<p><img src="/assets/images/rnn-part-1/x_train.png" alt="X_train" /></p>
+
+<p>Alright, pretty much good, but not done yet!</p>
+
+<p>Step #4. Reshape.</p>
+
+<p>We need to define the number of indicators for the input. In our case, we only have one column of the rate, so the indicator equals 1. Therefore, in #4, we reshape the <strong>X_train</strong> with the number of indicators.</p>
+
+<p>Done! We have good data we need to feed the system.</p>
+
+<h3 id="train-the-model">Train the model</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#1. Importing the Keras libraries and packages
+</span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">LSTM</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dropout</span>
+
+<span class="c1">#2. Initialising the RNN
+</span><span class="n">regressor</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+
+<span class="c1">#3. Adding the first LSTM layer and some Dropout regularisation
+</span><span class="n">regressor</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="n">LSTM_UNITS</span><span class="p">,</span> <span class="n">return_sequences</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">regressor</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">DROPOUT</span><span class="p">))</span>
+
+<span class="n">regressor</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="n">LSTM_UNITS</span><span class="p">,</span> <span class="n">return_sequences</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+<span class="n">regressor</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">DROPOUT</span><span class="p">))</span>
+
+<span class="c1">#3.x Adding a few more granular LSTM layer....
+</span>
+<span class="c1">#4. Adding the output layer
+</span><span class="n">regressor</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1">#5. Compiling the RNN
+</span><span class="n">regressor</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s">'adam'</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="s">'mean_squared_error'</span><span class="p">)</span>
+
+<span class="c1">#6. Fitting the RNN to the Training set
+</span><span class="n">regressor</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">=</span> <span class="n">EPOCHS</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Step #1. Using <strong>keras</strong> to import classes support to build the network.</p>
+
+<p>Step #2. Initialize the RNN</p>
+
+<p>Step #3. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won’t need.</p>
+
+<p>Step #4. Add the output layer with 1 output.</p>
+
+<p>Step #5, #6. Compile and train the set.</p>
+
+<p>It’s time to get a coffee ☕️, and wait for the machine learning…</p>
+
+<p><img src="/assets/images/rnn-part-1/mr-bean-waiting.gif" alt="waiting_model_training" /></p>
+
+<h2 id="make-the-prediction-and-evaluate-the-result">Make the prediction and evaluate the result</h2>
+
+<p>Phewww! After a while, we finally got the trained regressor and it’s ready for prediction.</p>
+
+<p>In this section, we will use the trained regressor to predict the exchange rate in 2 years, and compare it with the real data in the test set. This is probably the most exciting part. OK, let’s go 🏃‍♂️!</p>
+
+<p><strong>Note, it’s different from the interpolation that tries to get as close as possible to the real value, our RNN is trying to predict the direction from the values it learned in the past. It completely doesn’t know what the real values are when making the prediction. In other words, the real value and the predicted one may be very different!!</strong></p>
+
+<p>First, we need to load and pre-process the test data. Then, we do almost the same thing with the training set, but apply for the test set. (Load the test set, apply the scaler, and reshape). But then, we don’t feed the <strong>X_test</strong> into the RNN, but use the trained regressor to predict the values.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">predicted_rate</span> <span class="o">=</span> <span class="n">regressor</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Great, then we got the predicted values!! But wait, if you remember, we have the <strong>MinMaxScaler</strong> applied on the set, which means the outcome will be scaled within [0,1] bound. Therefore, we need to inverse it to get the real value. To do that, we reuse the same scaler and do the inverse transformation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">predicted_rate</span>  <span class="o">=</span> <span class="n">sc</span><span class="p">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">predicted_rate</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Finally! Now, it’s time to get a comparison. We use matplotlib to visualize the result in the same space, where we can see the differences between real and prediction values.</p>
+
+<p><img src="/assets/images/rnn-part-1/prediction-60-50-0.2-5.png" alt="Prediction" /></p>
+
+<p>Congratulation 🎉, the machine is working! Even though there are a few peaks at some points, generally, the model truly can predict!</p>
+
+<h2 id="playing-with-the-configuration">Playing with the configuration</h2>
+
+<p>In the source code, we have a few constants defined and adjust them to evaluate and get better (or worse) results. Basically, there are a few points we can think about</p>
+
+<ul>
+  <li>Increase the dataset. Yes, more data will help to train the better model.</li>
+  <li>Increase the number of time steps, where the time item will depend furthermore on the previous one, f.ex 100, 200.</li>
+  <li>Increase the number of layers and number of its neurons.</li>
+  <li>Decrease the rate in the dropout.</li>
+  <li>Increase the number of epochs.</li>
+</ul>
+
+<p>Let’s see a few adjustments</p>
+
+<p><img src="/assets/images/rnn-part-1/prediction-60-50-0.2-20.png" alt="Prediction" /></p>
+
+<p><em>Fig 4. TIME_STEPS = 60, LSTM_UNITS = 50, DROPOUT = 0.2, EPOCH = 20</em></p>
+
+<p><img src="/assets/images/rnn-part-1/prediction-120-100-0.1-100.png" alt="Prediction" /></p>
+
+<p><em>Fig 5. TIME_STEPS = 120, LSTM_UNITS = 100, DROPOUT = 0.1, EPOCH = 100</em></p>
+
+<h2 id="whats-next">What’s next??</h2>
+
+<p>In this article, we built a model that uses the time interval of 1 day. Therefore, it can predict the value for one day using the number of days in the past. However, what if we want to predict the exchange rate next week or next month 🤔. Then, we need a bit more. Let’s discover it in part 2 😉.</p>
+
+<p>Diving further! And practicing!</p>
+
+<p><img src="/assets/images/rnn-part-1/diving.gif" alt="Diving" /></p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">Hoc T's Blog maintained by <a href="https://github.com/HocTran">HocTran</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
