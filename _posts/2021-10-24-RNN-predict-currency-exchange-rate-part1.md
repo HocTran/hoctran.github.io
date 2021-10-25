@@ -151,7 +151,7 @@ Congratulations 🎉! You now have the training set and evaluating set ready.
 
 ## Build the model
 
-Quick recap. Check out this ultimate article about RNN and LSTM.
+Quick recap. Check out this [ultimate article](https://www.superdatascience.com/blogs/the-ultimate-guide-to-recurrent-neural-networks-rnn) about RNN and LSTM.
 
 ![RNN]({{ '/assets/images/rnn-part-1/rnn.png' | relative_url }})
 
