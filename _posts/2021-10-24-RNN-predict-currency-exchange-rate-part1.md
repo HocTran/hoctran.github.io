@@ -281,7 +281,7 @@ predicted_rate  = sc.inverse_transform(predicted_rate)
 
 Finally! Now, it's time to get a comparison. We use matplotlib to visualize the result in the same space, where we can see the differences between real and prediction values.
 
-![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.2-5.png' | relative_url }})
+![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-60-50-0.2-5.png' | relative_url }})
 
 *Fig5. Real and Prediction in a comparison*
 
@@ -301,13 +301,13 @@ Let's see a few adjustments
 
 
 
-| ![Prediction]({{ '/assets/images/rnn-part-1/prediction-30-20-0.1-20.png'}}) | ![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.2-20.png'}}) |
-|:---------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|
-|                              (30, 20, 0.1, 20)                              |                              (60, 50, 0.2, 20)                              |
-|![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.1-25.png' | relative_url }})|![Prediction]({{ '/assets/images/rnn-part-1/prediction-120-100-0.1-100.png' | relative_url }})|
-|(60, 50, 0.1, 25)|(120, 100, 0.1, 100)|
+| ![Prediction]({{ '/assets/images/rnn-part-1/prediction-2-10-10-0.8-5.png'}}) | ![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-30-20-0.1-20.png'}}) |
+|:----------------------------------------------------------------------------:|:-----------------------------------------------------------------------------:|
+|                             (4, 10, 10, 0.8, 5)                              |                             (4, 30, 20, 0.1, 20)                              |
+|![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-60-50-0.1-25.png' | relative_url }})|![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-120-100-0.1-100.png' | relative_url }})|
+|(4, 60, 50, 0.1, 25)|(4, 120, 100, 0.1, 100)|
 
-*Fig 6. Configuration = (TIME_STEPS, LSTM_UNITS, DROPOUT, EPOCH)*
+*Fig 6. Configuration = (LSTM layers, TIME_STEPS, LSTM_UNITS, DROPOUT, EPOCH)*
 
 
 ## What's next??
