@@ -1,4 +1,4 @@
-# Predicts currency exchange rate using RNN - part 1
+# Predict currency exchange rate using RNN - part 1
 
 ![Touching the water]({{ '/assets/images/rnn-part-1/cat_touching_water.gif' | relative_url }})
 
