@@ -83,7 +83,7 @@ In order to feed the train and evaluation, we need data. We will go to the [XE.c
 
 > I also attached the train and test sets (rate_train.csv and rate_test.csv) in the repo, you can skip this step and go to pre-processing.
 
-From XE.com, in the free charts section, select the source and destination currencies, in our case, they're **USD** and **THB** correspondingly. To make the prediction more precisely, we select the data in the past **10 years**. Then, inspect the network call, and we'll get the raw json for the rates. You can also find the attached json file in the source code `raw_10y.json`.
+From **XE.com**, in the free charts section, select the source and destination currencies, in our case, they're **USD** and **THB** correspondingly. To make the prediction more precisely, we select the data in the past **10 years**. Then, inspect the network call, and we'll get the raw json for the rates. You can also find the attached json file in the source code `raw_10y.json`.
 
 ![Xe Currency Charts]({{ '/assets/images/rnn-part-1/xe_chart.png' | relative_url }})
 
@@ -131,14 +131,14 @@ testSet.to_csv('rate_test.csv', index = False)
 
 **Step #1**. Import libraries
 
-* json lib is to parse json file we recorded earlier.
-* pandas is to write data into csv format (and read it later).
+* **json** lib is to parse json file we recorded earlier.
+* **pandas** is to write data into **csv** format (and read it later).
 
 **Step #2**. Parse the json
 
-* startTime - the time at the beginning, it means 10y ago by the time data was fetched.
-* interval - the time interval between every data row. In our case, it's one day.
-* rates - they're rate records for the past 10 years. Note, we drop the first value here, as it doesn't present a rate.
+* `startTime` - the time at the beginning, it means 10y ago by the time data was fetched.
+* `interval` - the time interval between every data row. In our case, it's one day.
+* `rates` - they're rate records for the past 10 years. Note, we drop the first value here, as it doesn't present a rate.
 
 **Step #3**. Mapping data. Prepare data into 2 columns of **date** and **rate**
 
@@ -317,7 +317,7 @@ Let's see a few adjustments
 
 ## What's next??
 
-In this article, we built a model that uses the time interval of 1 day. Therefore, it can predict the value for one day using the number of days in the past. However, what if we want to predict the exchange rate next week or next month 🤔. Then, we need a bit more. Let's discover it in part 2 😉.
+In this article, we built a model that uses the time interval of 1 day. Most importantly, it can predict the exchange rate for a single day using the data from the number of days in the past. However, what if we want to predict the exchange rate in the future, like next week or next month 🤔? Then, we need a bit more. Let's discover it in part 2 😉.
 
 Diving further! And practising!
 
