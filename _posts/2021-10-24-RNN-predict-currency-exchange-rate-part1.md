@@ -198,7 +198,7 @@ X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 
 **Step #1**. Read data from the set. We again use **pandas** to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the **numpyarray**.
 
-**Step #2**. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the **MinMaxScaler** from **sklearn**.
+**Step #2**. Next, we scale the numbers into the bound of **[0,1]**. There are a few scalers can use, here we involve the **MinMaxScaler** from **sklearn**.
 
 **Step #3**. Natively, we convert the set into 2 parts, the **X_train** stands for the inputs, the **y_train** stands for the value which the model drives to.
 
@@ -230,10 +230,13 @@ regressor = Sequential()
 regressor.add(LSTM(units = LSTM_UNITS, return_sequences = True, input_shape = (X_train.shape[1], 1)))
 regressor.add(Dropout(DROPOUT))
 
+#3.x Adding a few more granular LSTM layer....
 regressor.add(LSTM(units = LSTM_UNITS, return_sequences = True))
 regressor.add(Dropout(DROPOUT))
 
-#3.x Adding a few more granular LSTM layer....
+#3.x Adding the last LSTM layer
+regressor.add(LSTM(units = LSTM_UNITS))
+regressor.add(Dropout(DROPOUT))
 
 #4. Adding the output layer
 regressor.add(Dense(units = 1))
@@ -249,11 +252,13 @@ regressor.fit(X_train, y_train, epochs = EPOCHS, batch_size = BATCH_SIZE)
 
 **Step #2**. Initialize the RNN
 
-**Step #3**. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won't need.
+**Step #3**. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won't need. The last layer doesn't have `return_sequences`.
 
 **Step #4**. Add the output layer with 1 output.
 
-**Step #5, #6**. Compile and train the set.
+**Step #5**. Compile with selected optimizier and loss function.
+
+**Step #6**. Train the set.
 
 It's time to get a coffee ☕️, and wait for the machine learning...
 
@@ -273,7 +278,7 @@ First, we need to load and pre-process the test data. Then, we do almost the sam
 predicted_rate = regressor.predict(X_test)
 ```
 
-Great, then we got the predicted values!! But wait, if you remember, we have the **MinMaxScaler** applied on the set, which means the outcome will be scaled within [0,1] bound. Therefore, we need to inverse it to get the real value. To do that, we reuse the same scaler and do the inverse transformation.
+Great, then we got the predicted values!! But wait, if you remember, we have the **MinMaxScaler** applied on the set, which means the outcome will be scaled within **[0,1]** bound. Therefore, we need to inverse it to get the real value. To do that, we reuse the same scaler and do the inverse transformation.
 
 ```python
 predicted_rate  = sc.inverse_transform(predicted_rate)
@@ -314,6 +319,6 @@ Let's see a few adjustments
 
 In this article, we built a model that uses the time interval of 1 day. Therefore, it can predict the value for one day using the number of days in the past. However, what if we want to predict the exchange rate next week or next month 🤔. Then, we need a bit more. Let's discover it in part 2 😉.
 
-Diving further! And practicing!
+Diving further! And practising!
 
 ![Diving]({{ '/assets/images/rnn-part-1/diving.gif' | relative_url }})
