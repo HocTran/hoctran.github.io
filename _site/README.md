@@ -1,1 +1,1 @@
-## Welcome to HT's Github Pages
+## Welcome to HT's GitHub Pages

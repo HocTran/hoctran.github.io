@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-10-25T00:50:13+07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Hoc T’s Blog</title><subtitle>My learning notes</subtitle><author><name>Hoc T</name></author><entry><title type="html">Rnn Predict Currency Exchange Rate Part1</title><link href="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html" rel="alternate" type="text/html" title="Rnn Predict Currency Exchange Rate Part1" /><published>2021-10-24T00:00:00+07:00</published><updated>2021-10-24T00:00:00+07:00</updated><id>http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1</id><content type="html" xml:base="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html">&lt;h1 id=&quot;predicts-currency-exchangerate-using-rnn&quot;&gt;Predicts currency exchange rate using RNN&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-10-25T13:12:35+07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Hoc T’s Blog</title><subtitle>My learning notes</subtitle><author><name>Hoc T</name></author><entry><title type="html">Rnn Predict Currency Exchange Rate Part1</title><link href="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html" rel="alternate" type="text/html" title="Rnn Predict Currency Exchange Rate Part1" /><published>2021-10-24T00:00:00+07:00</published><updated>2021-10-24T00:00:00+07:00</updated><id>http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1</id><content type="html" xml:base="http://localhost:4000/2021/10/24/RNN-predict-currency-exchange-rate-part1.html">&lt;h1 id=&quot;predicts-currency-exchangerate-using-rnn&quot;&gt;Predicts currency exchange rate using RNN&lt;/h1&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/rnn-part-1/cat_touching_water.gif&quot; alt=&quot;Touching the water&quot; /&gt;&lt;/p&gt;
 
@@ -23,7 +23,7 @@
 
 &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 
-&lt;p&gt;We’re going through steps on building a simple model using regression with RNN that can predict the currency exchange rate. In this article, we will use USD ($) and THB (฿).&lt;/p&gt;
+&lt;p&gt;We’re going through steps on building a simple model using regression with RNN that can predict the currency exchange rate. In this article, we will use &lt;strong&gt;USD ($)&lt;/strong&gt; and &lt;strong&gt;THB (฿)&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;p&gt;In this scope of the article, I follow the course (and source-code) of &lt;a href=&quot;https://www.udemy.com/user/ligency-team/&quot;&gt;Ligency-Team&lt;/a&gt;. Therefore, I don’t go into the detail of what is the RNN model, but about how to apply the concept to resolve a real-life problem. If you’re interested in the course, please checkout &lt;a href=&quot;https://www.udemy.com/course/deeplearning/&quot;&gt;Deep Learning A-Z course&lt;/a&gt; from Ligency-Team.&lt;/p&gt;
 
@@ -150,24 +150,26 @@
 &lt;span class=&quot;n&quot;&gt;testSet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'rate_test.csv'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Step #1. Import libraries&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #1&lt;/strong&gt;. Import libraries&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;json lib is to parse json file we recorded earlier.&lt;/li&gt;
   &lt;li&gt;pandas is to write data into csv format (and read it later).&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Step #2. Parse the json&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #2&lt;/strong&gt;. Parse the json&lt;/p&gt;
+
 &lt;ul&gt;
   &lt;li&gt;startTime - the time at the beginning, it means 10y ago by the time data was fetched.&lt;/li&gt;
   &lt;li&gt;interval - the time interval between every data row. In our case, it’s one day.&lt;/li&gt;
   &lt;li&gt;rates - they’re rate records for the past 10 years. Note, we drop the first value here, as it doesn’t present a rate.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Step #3. Mapping data. Prepare data into 2 columns of &lt;strong&gt;date&lt;/strong&gt; and &lt;strong&gt;rate&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #3&lt;/strong&gt;. Mapping data. Prepare data into 2 columns of &lt;strong&gt;date&lt;/strong&gt; and &lt;strong&gt;rate&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Step #4. Split data set into the train and test sets. Here we use 80% of the samples (equivalent to the first 8 years) as the train set. The rest is for the test set (2 years).
-Step #5. Write the data to the files.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #4&lt;/strong&gt;. Split data set into the train and test sets. Here we use 80% of the samples (equivalent to the first 8 years) as the train set. The rest is for the test set (2 years).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step #5&lt;/strong&gt;. Write the data to the files.&lt;/p&gt;
 
 &lt;p&gt;Congratulations 🎉! You now have the training set and evaluating set ready.&lt;/p&gt;
 
@@ -219,11 +221,11 @@ Step #5. Write the data to the files.&lt;/p&gt;
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X_train&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X_train&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X_train&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X_train&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Step #1. Read data from the set. We again use &lt;strong&gt;pandas&lt;/strong&gt; to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the &lt;strong&gt;numpyarray&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #1&lt;/strong&gt;. Read data from the set. We again use &lt;strong&gt;pandas&lt;/strong&gt; to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the &lt;strong&gt;numpyarray&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;Step #2. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the &lt;strong&gt;MinMaxScaler&lt;/strong&gt; from &lt;strong&gt;sklearn&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #2&lt;/strong&gt;. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the &lt;strong&gt;MinMaxScaler&lt;/strong&gt; from &lt;strong&gt;sklearn&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;Step #3. Natively, we convert the set into 2 parts, the &lt;strong&gt;X_train&lt;/strong&gt; stands for the inputs, the &lt;strong&gt;y_train&lt;/strong&gt; stands for the value which the model drives to.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #3&lt;/strong&gt;. Natively, we convert the set into 2 parts, the &lt;strong&gt;X_train&lt;/strong&gt; stands for the inputs, the &lt;strong&gt;y_train&lt;/strong&gt; stands for the value which the model drives to.&lt;/p&gt;
 
 &lt;p&gt;In our RNN model, it works with the time series, as amount of previous steps will be used as inputs for one current step. Therefore each item in &lt;strong&gt;X_train&lt;/strong&gt; consists of an array with previous &lt;strong&gt;TIME_STEPS&lt;/strong&gt; values. The &lt;strong&gt;y_train&lt;/strong&gt; is simply inserting the plain values.&lt;/p&gt;
 
@@ -231,7 +233,7 @@ Step #5. Write the data to the files.&lt;/p&gt;
 
 &lt;p&gt;Alright, pretty much good, but not done yet!&lt;/p&gt;
 
-&lt;p&gt;Step #4. Reshape.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #4&lt;/strong&gt;. Reshape.&lt;/p&gt;
 
 &lt;p&gt;We need to define the number of indicators for the input. In our case, we only have one column of the rate, so the indicator equals 1. Therefore, in #4, we reshape the &lt;strong&gt;X_train&lt;/strong&gt; with the number of indicators.&lt;/p&gt;
 
@@ -267,15 +269,15 @@ Step #5. Write the data to the files.&lt;/p&gt;
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;regressor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X_train&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y_train&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epochs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EPOCHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;batch_size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BATCH_SIZE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Step #1. Using &lt;strong&gt;keras&lt;/strong&gt; to import classes support to build the network.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #1&lt;/strong&gt;. Using &lt;strong&gt;keras&lt;/strong&gt; to import classes support to build the network.&lt;/p&gt;
 
-&lt;p&gt;Step #2. Initialize the RNN&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #2&lt;/strong&gt;. Initialize the RNN&lt;/p&gt;
 
-&lt;p&gt;Step #3. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won’t need.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #3&lt;/strong&gt;. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won’t need.&lt;/p&gt;
 
-&lt;p&gt;Step #4. Add the output layer with 1 output.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #4&lt;/strong&gt;. Add the output layer with 1 output.&lt;/p&gt;
 
-&lt;p&gt;Step #5, #6. Compile and train the set.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step #5, #6&lt;/strong&gt;. Compile and train the set.&lt;/p&gt;
 
 &lt;p&gt;It’s time to get a coffee ☕️, and wait for the machine learning…&lt;/p&gt;
 
@@ -303,6 +305,8 @@ Step #5. Write the data to the files.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-60-50-0.2-5.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;em&gt;Fig5. Real and Prediction in a comparison&lt;/em&gt;&lt;/p&gt;
+
 &lt;p&gt;Congratulation 🎉, the machine is working! Even though there are a few peaks at some points, generally, the model truly can predict!&lt;/p&gt;
 
 &lt;h2 id=&quot;playing-with-the-configuration&quot;&gt;Playing with the configuration&lt;/h2&gt;
@@ -319,13 +323,30 @@ Step #5. Write the data to the files.&lt;/p&gt;
 
 &lt;p&gt;Let’s see a few adjustments&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-60-50-0.2-20.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-30-20-0.1-20.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-60-50-0.2-20.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;(30, 20, 0.1, 20)&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;(60, 50, 0.2, 20)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-60-50-0.1-25.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-120-100-0.1-100.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;(60, 50, 0.1, 25)&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;(120, 100, 0.1, 100)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-&lt;p&gt;&lt;em&gt;Fig 4. TIME_STEPS = 60, LSTM_UNITS = 50, DROPOUT = 0.2, EPOCH = 20&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/rnn-part-1/prediction-120-100-0.1-100.png&quot; alt=&quot;Prediction&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Fig 5. TIME_STEPS = 120, LSTM_UNITS = 100, DROPOUT = 0.1, EPOCH = 100&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Fig 6. Configuration = (TIME_STEPS, LSTM_UNITS, DROPOUT, EPOCH)&lt;/em&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;whats-next&quot;&gt;What’s next??&lt;/h2&gt;
 

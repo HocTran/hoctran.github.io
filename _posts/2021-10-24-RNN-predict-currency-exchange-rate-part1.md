@@ -19,7 +19,7 @@
 
 ## Introduction
 
-We're going through steps on building a simple model using regression with RNN that can predict the currency exchange rate. In this article, we will use USD ($) and THB (฿).
+We're going through steps on building a simple model using regression with RNN that can predict the currency exchange rate. In this article, we will use **USD ($)** and **THB (฿)**.
 
 In this scope of the article, I follow the course (and source-code) of [Ligency-Team](https://www.udemy.com/user/ligency-team/). Therefore, I don't go into the detail of what is the RNN model, but about how to apply the concept to resolve a real-life problem. If you're interested in the course, please checkout [Deep Learning A-Z course](https://www.udemy.com/course/deeplearning/) from Ligency-Team.
 
@@ -129,20 +129,22 @@ trainSet.to_csv('rate_train.csv', index = False)
 testSet.to_csv('rate_test.csv', index = False)
 ```
 
-Step #1. Import libraries
+**Step #1**. Import libraries
 
 * json lib is to parse json file we recorded earlier.
 * pandas is to write data into csv format (and read it later).
 
-Step #2. Parse the json
+**Step #2**. Parse the json
+
 * startTime - the time at the beginning, it means 10y ago by the time data was fetched.
 * interval - the time interval between every data row. In our case, it's one day.
 * rates - they're rate records for the past 10 years. Note, we drop the first value here, as it doesn't present a rate.
 
-Step #3. Mapping data. Prepare data into 2 columns of **date** and **rate**
+**Step #3**. Mapping data. Prepare data into 2 columns of **date** and **rate**
 
-Step #4. Split data set into the train and test sets. Here we use 80% of the samples (equivalent to the first 8 years) as the train set. The rest is for the test set (2 years).
-Step #5. Write the data to the files.
+**Step #4**. Split data set into the train and test sets. Here we use 80% of the samples (equivalent to the first 8 years) as the train set. The rest is for the test set (2 years).
+
+**Step #5**. Write the data to the files.
 
 Congratulations 🎉! You now have the training set and evaluating set ready.
 
@@ -194,11 +196,11 @@ X_train, y_train = np.array(X_train), np.array(y_train)
 X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 ```
 
-Step #1. Read data from the set. We again use **pandas** to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the **numpyarray**.
+**Step #1**. Read data from the set. We again use **pandas** to read the data from the set. The code will get all row values from the rate column in the csv, turn it into the **numpyarray**.
 
-Step #2. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the **MinMaxScaler** from **sklearn**.
+**Step #2**. Next, we scale the numbers into the bound of [0,1]. There are a few scalers can use, here we involve the **MinMaxScaler** from **sklearn**.
 
-Step #3. Natively, we convert the set into 2 parts, the **X_train** stands for the inputs, the **y_train** stands for the value which the model drives to.
+**Step #3**. Natively, we convert the set into 2 parts, the **X_train** stands for the inputs, the **y_train** stands for the value which the model drives to.
 
 In our RNN model, it works with the time series, as amount of previous steps will be used as inputs for one current step. Therefore each item in **X_train** consists of an array with previous **TIME_STEPS** values. The **y_train** is simply inserting the plain values.
 
@@ -206,7 +208,7 @@ In our RNN model, it works with the time series, as amount of previous steps wil
 
 Alright, pretty much good, but not done yet!
 
-Step #4. Reshape.
+**Step #4**. Reshape.
 
 We need to define the number of indicators for the input. In our case, we only have one column of the rate, so the indicator equals 1. Therefore, in #4, we reshape the **X_train** with the number of indicators.
 
@@ -243,15 +245,15 @@ regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 regressor.fit(X_train, y_train, epochs = EPOCHS, batch_size = BATCH_SIZE)
 ```
 
-Step #1. Using **keras** to import classes support to build the network.
+**Step #1**. Using **keras** to import classes support to build the network.
 
-Step #2. Initialize the RNN
+**Step #2**. Initialize the RNN
 
-Step #3. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won't need.
+**Step #3**. Add a number of LSTM layers. Only the first one will get the input shape of the train data, all the following won't need.
 
-Step #4. Add the output layer with 1 output.
+**Step #4**. Add the output layer with 1 output.
 
-Step #5, #6. Compile and train the set.
+**Step #5, #6**. Compile and train the set.
 
 It's time to get a coffee ☕️, and wait for the machine learning...
 
@@ -281,6 +283,8 @@ Finally! Now, it's time to get a comparison. We use matplotlib to visualize the 
 
 ![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.2-5.png' | relative_url }})
 
+*Fig5. Real and Prediction in a comparison*
+
 Congratulation 🎉, the machine is working! Even though there are a few peaks at some points, generally, the model truly can predict!
 
 ## Playing with the configuration
@@ -295,13 +299,15 @@ In the source code, we have a few constants defined and adjust them to evaluate 
 
 Let's see a few adjustments
 
-![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.2-20.png' | relative_url }})
 
-*Fig 4. TIME_STEPS = 60, LSTM_UNITS = 50, DROPOUT = 0.2, EPOCH = 20*
 
-![Prediction]({{ '/assets/images/rnn-part-1/prediction-120-100-0.1-100.png' | relative_url }})
+| ![Prediction]({{ '/assets/images/rnn-part-1/prediction-30-20-0.1-20.png'}}) | ![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.2-20.png'}}) |
+|:---------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|
+|                              (30, 20, 0.1, 20)                              |                              (60, 50, 0.2, 20)                              |
+|![Prediction]({{ '/assets/images/rnn-part-1/prediction-60-50-0.1-25.png' | relative_url }})|![Prediction]({{ '/assets/images/rnn-part-1/prediction-120-100-0.1-100.png' | relative_url }})|
+|(60, 50, 0.1, 25)|(120, 100, 0.1, 100)|
 
-*Fig 5. TIME_STEPS = 120, LSTM_UNITS = 100, DROPOUT = 0.1, EPOCH = 100*
+*Fig 6. Configuration = (TIME_STEPS, LSTM_UNITS, DROPOUT, EPOCH)*
 
 
 ## What's next??
