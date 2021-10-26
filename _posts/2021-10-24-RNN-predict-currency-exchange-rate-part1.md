@@ -25,7 +25,7 @@ In this scope of the article, I follow the course (and source-code) of [Ligency-
 
 [The full source code can be found here](https://github.com/HocTran/rnn-currency-exchange-rate).
 
-As a beginner, I also have some troubles while building up and running the solution, so I want to share the setup as well. Of course, a little Python experience will help you go faster, but if you don't have, it's fine; you still get it quickly with basic programming skills, I promise 😉.
+As a beginner, I also have some troubles while building up and running the solution, so I want to share the setup as well. Of course, a little Python experience will help you go faster, but if you don't have, it's fine; you still get it quickly with basic programming skills or with [30 mins crash course](https://www.w3schools.com/python/default.asp) on w3school, I promise 😉.
 
 This article consists of several steps to go:
 
