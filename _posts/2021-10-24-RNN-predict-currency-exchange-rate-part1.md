@@ -308,7 +308,7 @@ Let's see a few adjustments
 
 | ![Prediction]({{ '/assets/images/rnn-part-1/prediction-2-10-10-0.8-5.png'}}) | ![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-30-20-0.1-20.png'}}) |
 |:----------------------------------------------------------------------------:|:-----------------------------------------------------------------------------:|
-|                             (4, 10, 10, 0.8, 5)                              |                             (4, 30, 20, 0.1, 20)                              |
+|                             (2, 10, 10, 0.8, 5)                              |                             (4, 30, 20, 0.1, 20)                              |
 |![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-60-50-0.1-25.png' | relative_url }})|![Prediction]({{ '/assets/images/rnn-part-1/prediction-4-120-100-0.1-100.png' | relative_url }})|
 |(4, 60, 50, 0.1, 25)|(4, 120, 100, 0.1, 100)|
 
@@ -317,7 +317,7 @@ Let's see a few adjustments
 
 ## What's next??
 
-In this article, we built a model that uses the time interval of 1 day. Most importantly, it can predict the exchange rate for a single day using the data from the number of days in the past. However, what if we want to predict the exchange rate in the future, like next week or next month 🤔? Then, we need a bit more. Let's discover it in part 2 😉.
+In this article, we built a model that uses the time interval of 1 day. Most importantly, it can predict the exchange rate for a single day using the data from the number of days in the past. However, what if we want to predict the exchange rate further in the future, like next week or next month 🤔? Then, we need a bit more. Let's discover it in part 2 😉.
 
 Diving further! And practising!
 
